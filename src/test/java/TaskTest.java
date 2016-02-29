@@ -1,5 +1,6 @@
 import org.junit.*;
 import static org.junit.Assert.*;
+import java.util.List;
 
 public class TaskTest {
 
@@ -41,12 +42,30 @@ public class TaskTest {
     assertTrue(myTask.equals(savedTask));
   }
 
-  // @Test
-  // public void find_findsTaskInDatabase_true() {
-  //   Task myTask = new Task ("Mow the lawn");
-  //   myTask.save();
-  //   Task savedTask = Task.find(myTask.getID());
-  //   assertTrue(myTask.equals(savedTask));
-  // }
+  @Test
+  public void addCategory_addsCategoryToTask() {
+    Category myCategory = new Category("Household chores");
+    myCategory.save();
+
+    Task myTask = new Task("Mow the lawn");
+    myTask.save();
+
+    myTask.addCategory(myCategory);
+    Category savedCategory = myTask.getCategories().get(0);
+    assertTrue(myCategory.equals(savedCategory));
+  }
+
+  @Test
+  public void getCategories_returnsAllCategories_List() {
+    Category myCategory = new Category("Household chores");
+    myCategory.save();
+
+    Task myTask = new Task("Mow the lawn");
+    myTask.save();
+
+    myTask.addCategory(myCategory);
+    List savedCategories = myTask.getCategories();
+    assertEquals(1, savedCategories.size());
+  }
 
 }

@@ -4,7 +4,6 @@ import org.sql2o.*;
 public class Task {
   private int id;
   private String description;
-  private int categoryId;
 
   public Task(String description) {
     this.description = description;
@@ -48,10 +47,49 @@ public class Task {
 
   public static Task find(int id) {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "SELECT id, description, category_id as categoryId FROM tasks WHERE id = :id";
+      String sql = "SELECT id, description FROM tasks WHERE id = :id";
       return con.createQuery(sql)
         .addParameter("id", id)
         .executeAndFetchFirst(Task.class);
+    }
+  }
+
+  public void addCategory(Category category) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "INSERT INTO categories_tasks (category_id, task_id) VALUES (:category_id, :task_id)";
+      con.createQuery(sql)
+        .addParameter("category_id", category.getId())
+        .addParameter("task_id", this.getId())
+        .executeUpdate();
+    }
+  }
+
+  public ArrayList<Category> getCategories(){
+
+    //create a List object called categoryIds containing Integer objects which represent each matching category_id
+    try(Connection con = DB.sql2o.open()) {
+      String categoryIDQuery = "SELECT category_id FROM categories_tasks WHERE category_id = :category_id;";
+      List<Integer> categoryIds = con.createQuery(categoryIDQuery)
+        .addParameter("category_id", this.getId())
+        .executeAndFetch(Integer.class);
+
+      //create an empty ArrayList object that will hold Category objects
+      //call it categories
+      ArrayList<Category> categories = new ArrayList<Category>();
+
+      //for each element (we will call them categoryId) in categoryIds
+      //select the record from categories where id is the categoryId
+      //create a Category object from that selection
+      //then insert that Category object into the ArrayList<Category> categories
+      for (Integer categoryId : categoryIds) {
+        String categoryQuery = "SELECT * FROM categories WHERE id = :categoryId;";
+        Category category = con.createQuery(categoryQuery)
+          .addParameter("categoryId", categoryId)
+          .executeAndFetchFirst(Category.class);
+        categories.add(category);
+      }
+      //return ArrayList<Category> categories
+      return categories;
     }
   }
 }
