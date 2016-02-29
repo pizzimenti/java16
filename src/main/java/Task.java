@@ -68,9 +68,9 @@ public class Task {
 
     //create a List object called categoryIds containing Integer objects which represent each matching category_id
     try(Connection con = DB.sql2o.open()) {
-      String categoryIDQuery = "SELECT category_id FROM categories_tasks WHERE category_id = :category_id;";
+      String categoryIDQuery = "SELECT category_id FROM categories_tasks WHERE task_id = :task_id;";
       List<Integer> categoryIds = con.createQuery(categoryIDQuery)
-        .addParameter("category_id", this.getId())
+        .addParameter("task_id", this.getId())
         .executeAndFetch(Integer.class);
 
       //create an empty ArrayList object that will hold Category objects
@@ -90,6 +90,20 @@ public class Task {
       }
       //return ArrayList<Category> categories
       return categories;
+    }
+  }
+
+  public void delete() {
+    try(Connection con = DB.sql2o.open()) {
+      String deleteQuery = "DELETE FROM tasks WHERE id = :id;";
+      con.createQuery(deleteQuery)
+        .addParameter("id", this.id)
+        .executeUpdate();
+
+      String joinDeleteQuery = "DELETE FROM categories_tasks WHERE task_id = :taskId";
+        con.createQuery(joinDeleteQuery)
+          .addParameter("taskId", this.getId())
+          .executeUpdate();
     }
   }
 }

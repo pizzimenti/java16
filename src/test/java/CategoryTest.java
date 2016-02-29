@@ -34,7 +34,7 @@ public class CategoryTest {
     Category savedCategory = Category.find(myCategory.getId());
     assertTrue(myCategory.equals(savedCategory));
   }
-  
+
   @Test
   public void addTask_addsTaskToCategory() {
     Category myCategory = new Category("Household chores");
@@ -59,5 +59,18 @@ public class CategoryTest {
     myCategory.addTask(myTask);
     List savedTasks = myCategory.getTasks();
     assertEquals(1, savedTasks.size());
+  }
+
+  @Test
+  public void delete_deletesAllTasksAndListsAssociations_emptyList() {
+    Category myCategory = new Category("Household chores");
+    myCategory.save();
+
+    Task myTask = new Task("Mow the lawn");
+    myTask.save();
+
+    myCategory.addTask(myTask);
+    myCategory.delete();
+    assertEquals(0, myTask.getCategories().size());
   }
 }
