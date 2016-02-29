@@ -4,6 +4,7 @@ import org.sql2o.*;
 public class Task {
   private int id;
   private String description;
+  private int categoryId;
 
   public Task(String description) {
     this.description = description;
@@ -47,7 +48,7 @@ public class Task {
 
   public static Task find(int id) {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "SELECT * FROM tasks WHERE id = :id";
+      String sql = "SELECT id, description, category_id as categoryId FROM tasks WHERE id = :id";
       return con.createQuery(sql)
         .addParameter("id", id)
         .executeAndFetchFirst(Task.class);
