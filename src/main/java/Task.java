@@ -37,7 +37,7 @@ public class Task {
 
   public void save() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO Tasks (description) VALUES (:description)";
+      String sql = "INSERT INTO Tasks (description, done) VALUES (:description, true)";
       this.id = (int) con.createQuery(sql, true)
         .addParameter("description", this.description)
         .executeUpdate()
@@ -104,6 +104,14 @@ public class Task {
         con.createQuery(joinDeleteQuery)
           .addParameter("taskId", this.getId())
           .executeUpdate();
+    }
+  }
+
+  public void toggleDone() {
+    if(this.done == false) {
+      this.done = true;
+    } else if (this.done == true) {
+      this.done = false;
     }
   }
 }

@@ -11,6 +11,9 @@
 
 #foreach ($task in $tasks)
   <li><a href="/tasks/$task.getId()">$task.getDescription()</a></li>
+  <form  method="post">
+    <input type="checkbox" name="$task.getId()" onChange="this.form.submit()">Done<br>
+  </form>
 #end
 
 <p><a href="/">Home</a></p>

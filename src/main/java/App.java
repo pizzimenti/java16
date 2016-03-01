@@ -60,6 +60,16 @@ public class App {
       return null;
     });
 
+    post("/task/:id", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      int id = Integer.parseInt(request.params("id"));
+      Task savedTask = Task.find(id);
+      savedTask.toggleDone();
+      savedTask.update();
+      response.redirect("/tasks");
+      return null;
+    });
+
     post("/categories", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
       String name = request.queryParams("name");

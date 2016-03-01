@@ -80,4 +80,24 @@ public class TaskTest {
     myTask.delete();
     assertEquals(0, myCategory.getTasks().size());
   }
+
+  @Test
+  pubic void markDone_markTaskCompleted() {
+      Task myTask = new Task ("Mow the lawn");
+      myTask.save();
+      myTask.markDone();
+      myTask.update();
+      Task savedTask = Task.all().get(0);
+      assertEquals(myTask.getId(), savedTask.getId());
+    }
+  }
+
+  // @Test
+  // public void assignDueDate_assignsDueDateToObject() {
+  //   Task myTask = new Task ("Mow the lawn");
+  //   myTask.save();
+  //   myTask.setDueDate("02")
+  //   Task savedTask = Task.all().get(0);
+  //   assertEquals(myTask.getId(), savedTask.getId());
+  // }
 }
